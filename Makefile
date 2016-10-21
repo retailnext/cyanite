@@ -1,7 +1,7 @@
 GRAFANA_DIR		:= ./grafana/
 STRESSER_DIR		:= ./graphite-stresser/
 CLUSTER_NAME		:= cyanite_cluster
-CASSANDRA_VERSION	:= binary:3.5
+CASSANDRA_VERSION	:= binary:3.9
 
 maybe_install_ccm:
 	which ccm || test -s ~/.local/bin/ccm || pip install --user ccm
@@ -11,10 +11,12 @@ prepare_aliases:
 	sudo ifconfig lo0 alias 127.0.0.2 up
 
 start_one_node_cluster: maybe_install_ccm
-	sudo ifconfig lo0 alias 127.0.1.1 up			;\
 	ccm create $(CLUSTER_NAME) -v $(CASSANDRA_VERSION)	;\
+	echo "Populating..."					;\
 	ccm populate -n 1              				;\
+	echo "Starting..."					;\
 	ccm start						;\
+	echo "Loading schema..."				;\
 	ccm node1 cqlsh < test/resources/schema.cql
 
 reload_schema: maybe_install_ccm
