@@ -10,7 +10,7 @@
            com.lmax.disruptor.EventHandler)
   (:require [com.stuartsierra.component :as component]
             [spootnik.reporter          :as r]
-            [clojure.tools.logging      :refer [warn error]]))
+            [clojure.tools.logging      :refer [warn error info]]))
 
 
 (defonce default-poolsize 4)
@@ -89,6 +89,7 @@
   (let [capacity (or (:queue-capacity defaults) default-capacity)
         pool     (threadpool (or (:pool-size defaults) default-poolsize))
         factory  (make-event-factory #(volatile! nil))]
+    (info "Creating queue with pool size:" (or (:pool-size defaults) default-poolsize) " and capacity:" capacity)
     (DisruptorQueue. (disruptor factory capacity pool)
                      (make-translator vreset!)
                      alias
