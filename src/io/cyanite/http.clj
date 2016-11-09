@@ -139,7 +139,7 @@
   ([options handler]
    (run-server (assoc options :ring-handler handler)))
   ([options]
-   (let [thread-count (or (:loop-thread-count options) 1)
+   (let [thread-count (or (:loop-thread-count options) 16)
          boss-group   (if (and (epoll?) (not (:disable-epoll options)))
                         (EpollEventLoopGroup. thread-count)
                         (NioEventLoopGroup.   thread-count))
