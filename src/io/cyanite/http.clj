@@ -1,7 +1,7 @@
 (ns io.cyanite.http
   "Small wrapper around netty for HTTP servers"
   (:require [com.stuartsierra.component :as component]
-            [clojure.tools.logging      :refer [error]])
+            [clojure.tools.logging      :refer [info error]])
   (:import io.netty.channel.ChannelHandlerContext
            io.netty.channel.ChannelHandlerAdapter
            io.netty.channel.ChannelInboundHandlerAdapter
@@ -139,6 +139,7 @@
   ([options handler]
    (run-server (assoc options :ring-handler handler)))
   ([options]
+   (info "Creating API worker pool with thread count:" (or (:loop-thread-count options) 1))
    (let [thread-count (or (:loop-thread-count options) 16)
          boss-group   (if (and (epoll?) (not (:disable-epoll options)))
                         (EpollEventLoopGroup. thread-count)
