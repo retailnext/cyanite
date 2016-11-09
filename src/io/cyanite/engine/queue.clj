@@ -13,8 +13,8 @@
             [clojure.tools.logging      :refer [warn error info]]))
 
 
-(defonce default-poolsize 4)
-(defonce default-capacity (int 1024))
+(defonce default-poolsize 16)
+(defonce default-capacity (int 1048576))
 
 (defprotocol QueueEngine
   (shutdown! [this])
